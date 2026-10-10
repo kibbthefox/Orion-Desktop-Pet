@@ -9,6 +9,11 @@ Orion is 15 year old cat. She is very sweet, but is often stressed out by someth
 
 Orion stays on top of your desktop and can be grabbed at the body and moved around. Also give them many headpats :3
 
+## Download
+[Itch.io](https://corgtheporg.itch.io/orion-desktop-pet) 
+
+[Github](https://github.com/kibbthefox/Orion-Desktop-Pet/releases/tag/1.0) 
+
 ## Opening Instructions
 
 ### Versions Tested
