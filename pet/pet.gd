@@ -7,6 +7,9 @@ var pet:bool = false
 var mstartx = 0
 var mstarty = 0
 var meowcount:int = 0
+var tween
+var tweengoing:bool = false
+
 
 func _process(_delta: float) -> void:
 	if get_viewport().get_mouse_position()[0] > 200 \
@@ -33,6 +36,7 @@ func _process(_delta: float) -> void:
 			$AudioStreamPlayer2D.play()
 			meowcount += 1
 			$counter.text = str(meowcount) + " "
+			appear()
 		if pet == false and headorbody == "head":
 			Input.set_default_cursor_shape(Input.CURSOR_CAN_DROP)
 	else:
@@ -46,11 +50,23 @@ func _process(_delta: float) -> void:
 		get_window().position.y +=get_viewport().get_mouse_position()[1]/2 - mstarty/2
 	if pet == true:
 		Input.set_default_cursor_shape(Input.CURSOR_DRAG)
-		$AnimatedSprite2D.frame = 1
+		$cat.frame = 1
 
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_released("left"):
 		grab = false
 		pet = false
-		$AnimatedSprite2D.frame = 0
+		$cat.frame = 0
+
+
+func appear():
+	if tweengoing == true:
+		tween.kill()
+	$counter.modulate.a = 1.0
+	tween = create_tween()
+	tweengoing = true
+	tween.tween_property($counter, "modulate:a", 0.0, 3.0)
+	await tween.finished
+	tweengoing = false
+	print(tweengoing)
