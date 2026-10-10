@@ -1,46 +1,56 @@
 extends Node2D
 
 var touching:bool
+var headorbody:String
 var grab:bool = false
-
+var pet:bool = false
+var mstartx = 0
+var mstarty = 0
+var meowcount:int = 0
 
 func _process(_delta: float) -> void:
-	#    pick up
 	if get_viewport().get_mouse_position()[0] > 200 \
 	and get_viewport().get_mouse_position()[0] < 800 \
 	and get_viewport().get_mouse_position()[1] < 900 \
 	and get_viewport().get_mouse_position()[1] > 500:
 		touching = true
-	elif get_viewport().get_mouse_position()[0] < 198 \
-	and get_viewport().get_mouse_position()[0] > 802 \
-	and get_viewport().get_mouse_position()[1] > 902 \
-	and get_viewport().get_mouse_position()[1] < 498:
+		headorbody = "body"
+	elif get_viewport().get_mouse_position()[0] > 200 \
+	and get_viewport().get_mouse_position()[0] < 800 \
+	and get_viewport().get_mouse_position()[1] < 400 \
+	and get_viewport().get_mouse_position()[1] > 100:
+		touching = true
+		headorbody = "head"
+	else:
 		touching = false
 	if touching == true:
-		if Input.is_action_just_pressed("left"):
+		if Input.is_action_just_pressed("left") and headorbody == "body":
 			grab = true
-		if Input.is_action_just_released("left"):
-			grab = false
-		if grab == false:
+		if grab == false and headorbody == "body":
 			Input.set_default_cursor_shape(Input.CURSOR_CAN_DROP)
-		else:
-			Input.set_default_cursor_shape(Input.CURSOR_DRAG)
+		if Input.is_action_just_pressed("left") and headorbody == "head":
+			pet = true
+			$AudioStreamPlayer2D.play()
+			meowcount += 1
+			$counter.text = str(meowcount) + " "
+		if pet == false and headorbody == "head":
+			Input.set_default_cursor_shape(Input.CURSOR_CAN_DROP)
 	else:
 		Input.set_default_cursor_shape(Input.CURSOR_ARROW)
-		
+	if Input.is_action_just_pressed("left") == true and headorbody == "body":
+		mstartx = get_viewport().get_mouse_position()[0]
+		mstarty = get_viewport().get_mouse_position()[1]
+	if grab == true:
+		Input.set_default_cursor_shape(Input.CURSOR_DRAG)
+		get_window().position.x +=get_viewport().get_mouse_position()[0]/2 - mstartx/2
+		get_window().position.y +=get_viewport().get_mouse_position()[1]/2 - mstarty/2
+	if pet == true:
+		Input.set_default_cursor_shape(Input.CURSOR_DRAG)
+		$AnimatedSprite2D.frame = 1
 
 
-
-#
-#func _physics_process(_delta: float) -> void:
-	#windowpos = get_window().position
-	#mouseposy = int(get_viewport().get_mouse_position()[1] / 4) * 4
-	#mouseposx = int(get_viewport().get_mouse_position()[0] / 4) * 4 
-	#if windowpos[1] - 215 < mouseposy:
-		#get_window().position[1] += 1
-	#if windowpos[1] - 215 > mouseposy:
-		#get_window().position[1] -= 4
-	#if windowpos[0] - 600 < mouseposx:
-		#get_window().position[0] += 4
-	#if windowpos[0] - 600 > mouseposx:
-		#get_window().position[0] -= 4
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_released("left"):
+		grab = false
+		pet = false
+		$AnimatedSprite2D.frame = 0

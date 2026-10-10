@@ -14,10 +14,6 @@ config/name="pet"
 run/main_scene="uid://b6ebav3vxckca"
 config/features=PackedStringArray("4.4", "GL Compatibility")
 
-[autoload]
-
-Gv="*res://gv.gd"
-
 [display]
 
 window/size/viewport_width=500
